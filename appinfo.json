@@ -1,0 +1,30 @@
+{
+    "appKeys": {
+        "KEY_DEPARTURETIME": 1,
+        "KEY_EXPECTED_DEPARTURE": 7,
+        "KEY_FILTER_STATION": 2,
+        "KEY_PLATFORM": 8,
+        "KEY_SCHEDULED_DEPARTURE": 6,
+        "KEY_STATION": 0,
+        "KEY_TRAINS": 3,
+        "KEY_TRAIN_DESTINATION_STATION": 4,
+        "KEY_TRAIN_VIA": 5
+    },
+    "capabilities": [
+        "location"
+    ],
+    "companyName": "tom@tejackson.com",
+    "longName": "TrainTime",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "sdkVersion": "2",
+    "shortName": "TrainTime",
+    "uuid": "672c4311-1cec-4b54-953f-dffbf14aac1a",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
