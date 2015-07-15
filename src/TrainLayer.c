@@ -10,7 +10,7 @@ void setupTrainLayer( struct TrainLayers *trainLayer, Window *window )
   text_layer_set_background_color(trainLayer->s_train_line_1_layer, GColorClear);
   text_layer_set_text_color(trainLayer->s_train_line_1_layer, GColorBlack);
   text_layer_set_text_alignment(trainLayer->s_train_line_1_layer, GTextAlignmentLeft);
-  text_layer_set_text(trainLayer->s_train_line_1_layer, "Test");
+  text_layer_set_text(trainLayer->s_train_line_1_layer, "");
   
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(trainLayer->s_train_line_1_layer));
   
