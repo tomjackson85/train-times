@@ -1,15 +1,8 @@
 {
     "appKeys": {
-        "KEY_DEPARTURETIME": 1,
-        "KEY_EXPECTED_DEPARTURE": 7,
-        "KEY_FILTER_STATION": 2,
-        "KEY_PLATFORM": 8,
-        "KEY_SCHEDULED_DEPARTURE": 6,
+        "KEY_FILTER_STATION": 1,
         "KEY_STATION": 0,
-        "KEY_TRAINS": 3,
-        "KEY_TRAIN_DATA": 9,
-        "KEY_TRAIN_DESTINATION_STATION": 4,
-        "KEY_TRAIN_VIA": 5
+        "KEY_TRAIN_DATA": 2
     },
     "capabilities": [
         "location"

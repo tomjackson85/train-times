@@ -1,21 +1,12 @@
 #include <pebble.h>
-//#include <string.h>
-//#include <stdio.h>
-//#include <stdlib.h>
+
 #include "TrainLayer.h"
 #include "data-processor.h"
 
   
 #define KEY_STATION 0
-#define KEY_DEPARTURETIME 1
-#define KEY_FILTER_STATION 2
-#define KEY_TRAINS 3
-#define KEY_TRAIN_DESTINATION_STATION 4
-#define KEY_TRAIN_VIA 5
-#define KEY_SCHEDULED_DEPARTURE 6
-#define KEY_EXPECTED_DEPARTURE 7
-#define KEY_PLATFORM 8
-#define KEY_TRAIN_DATA 9
+#define KEY_FILTER_STATION 1
+#define KEY_TRAIN_DATA 2
 
 static Window *s_main_window;
 static TextLayer *s_time_layer;
@@ -29,15 +20,8 @@ static TextLayer *s_divider_line_1_layer;
 static char station_buffer[32];
 static char station_filter_buffer[32];
 static char station_filter_buffer_formatted[32];
-static char departureTime_buffer[32];
-static char train_destinationstation_buffer[32];
-static char train_via_buffer[32];
-static char train_scheduled_departure_buffer[32];
-static char train_expected_departure_buffer[32];
-static char train_platform_buffer[32];
 static char train_data_buffer[300];
 
-//static DictionaryIterator trains_iter;
 //144 × 168 pixels
 
 static struct TrainLayers trainLayer1;  
@@ -148,28 +132,20 @@ static void main_window_unload(Window *window) {
     text_layer_destroy(s_divider_line_1_layer);
 
     destroyTrainLayer(&trainLayer1);
-  destroyTrainLayer(&trainLayer2);
+    destroyTrainLayer(&trainLayer2);
 }
 
 static void deserialiseTrainData(char input[300]){
-  
- // char buf[300];
- // strncpy(buf, input, sizeof(input));
 
-APP_LOG(APP_LOG_LEVEL_INFO , "%s", input);  
-    
+//APP_LOG(APP_LOG_LEVEL_INFO , "%s", input);  
+   
+  // Split data into train strings
   ProcessingState* state = data_processor_create(input, '~');
- /* uint8_t num_strings = data_processor_count(state);
-  char** strings = malloc(sizeof(char*) * num_strings);
-  for (uint8_t n = 0; n < num_strings; n += 1) {
-    strings[n] = data_processor_get_string(state);
-  }*/
-  
   char* train1String = data_processor_get_string(state);
   char* train2String = data_processor_get_string(state);
   
+  // split train string into individual data strings
   ProcessingState* stateTrain = data_processor_create(train1String, '|');
-  
   snprintf(train1.train_destinationstation , sizeof(train1.train_destinationstation ), "%s", data_processor_get_string(stateTrain));
   snprintf(train1.train_via , sizeof(train1.train_destinationstation ), "%s", data_processor_get_string(stateTrain));
   snprintf(train1.train_scheduled_departure , sizeof(train1.train_destinationstation ), "%s", data_processor_get_string(stateTrain));
@@ -177,7 +153,6 @@ APP_LOG(APP_LOG_LEVEL_INFO , "%s", input);
   snprintf(train1.train_platform , sizeof(train1.train_destinationstation ), "%s", data_processor_get_string(stateTrain));
   
   stateTrain = data_processor_create(train2String, '|');
-  
   snprintf(train2.train_destinationstation , sizeof(train1.train_destinationstation ), "%s", data_processor_get_string(stateTrain));
   snprintf(train2.train_via , sizeof(train1.train_destinationstation ), "%s", data_processor_get_string(stateTrain));
   snprintf(train2.train_scheduled_departure , sizeof(train1.train_destinationstation ), "%s", data_processor_get_string(stateTrain));
@@ -185,8 +160,8 @@ APP_LOG(APP_LOG_LEVEL_INFO , "%s", input);
   snprintf(train2.train_platform , sizeof(train1.train_destinationstation ), "%s", data_processor_get_string(stateTrain));
 
   
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train1String);
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train2String);
+//  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train1String);
+//  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train2String);
   
   
   
@@ -205,26 +180,8 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     case KEY_STATION:
       snprintf(station_buffer, sizeof(station_buffer), "%s", t->value->cstring);
       break;
-    case KEY_DEPARTURETIME:
-      snprintf(departureTime_buffer, sizeof(departureTime_buffer), "%s", t->value->cstring);
-      break;
     case KEY_FILTER_STATION:
       snprintf(station_filter_buffer, sizeof(station_filter_buffer), "%s", t->value->cstring);
-      break;
-    case KEY_TRAIN_DESTINATION_STATION:
-      snprintf(train_destinationstation_buffer, sizeof(train_destinationstation_buffer), "%s", t->value->cstring);
-      break;
-    case KEY_TRAIN_VIA:
-      snprintf(train_via_buffer , sizeof(train_via_buffer ), "%s", t->value->cstring);
-      break;
-    case KEY_SCHEDULED_DEPARTURE:
-      snprintf(train_scheduled_departure_buffer , sizeof(train_scheduled_departure_buffer ), "%s", t->value->cstring);
-      break;
-    case KEY_EXPECTED_DEPARTURE:
-      snprintf(train_expected_departure_buffer , sizeof(train_expected_departure_buffer ), "%s", t->value->cstring);
-      break;
-    case KEY_PLATFORM:
-      snprintf(train_platform_buffer , sizeof(train_platform_buffer ), "%s", t->value->cstring);
       break;
     case KEY_TRAIN_DATA:
       snprintf(train_data_buffer , sizeof(train_data_buffer ), "%s", t->value->cstring);
@@ -238,21 +195,8 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     t = dict_read_next(iterator);
   }
   
-    APP_LOG(APP_LOG_LEVEL_INFO, "About to deserialise data");
- // char string[300] = "London Victoria||07:52|On time|1~London Victoria||08:22|On time|1";
+
   deserialiseTrainData(train_data_buffer);
-  
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train1.train_destinationstation);
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train1.train_via);  
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train1.train_scheduled_departure);
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train1.train_expected_departure);
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train1.train_platform);
-  
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train2.train_destinationstation);
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train2.train_via);  
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train2.train_scheduled_departure);
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train2.train_expected_departure);
-  APP_LOG(APP_LOG_LEVEL_INFO , "%s", train2.train_platform);
   
   // Departure Station
   text_layer_set_text(s_departure_station_layer, station_buffer);
@@ -261,10 +205,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   snprintf(station_filter_buffer_formatted, sizeof(station_filter_buffer_formatted), "Calling at %s", station_filter_buffer);
   text_layer_set_text(s_filter_station_layer, station_filter_buffer_formatted);
   
-  //updateTrainLayer( &trainLayer1, train_destinationstation_buffer, train_via_buffer, train_scheduled_departure_buffer, train_expected_departure_buffer,
-  //                    train_platform_buffer );
-  // updateTrainLayer(&trainLayer2, train2.train_destinationstation, train2.train_via,  train2.train_scheduled_departure, train2.train_expected_departure,
-   //                train2.train_platform);
+  // Setting Trains
   updateTrainLayerForTrain(&trainLayer1, &train1);
   updateTrainLayerForTrain(&trainLayer2, &train2);
 }

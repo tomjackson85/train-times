@@ -57,6 +57,7 @@ function getTrains(fromStation, toStation) {
         serialisedTrainString += nullCheckJson(json.trainServices[x].platform) + "~";
       }
       
+      // strip of the last ~
       if(serialisedTrainString.slice(-1)== "~"){
          serialisedTrainString = serialisedTrainString.slice(0,-1);
          }
@@ -67,11 +68,6 @@ function getTrains(fromStation, toStation) {
       var dictionary = {
         'KEY_STATION': nullCheckJson(json.locationName),
         'KEY_FILTER_STATION': nullCheckJson(json.filterLocationName),
-        'KEY_TRAIN_DESTINATION_STATION': nullCheckJson(json.trainServices[0].destination[0].locationName),
-        'KEY_TRAIN_VIA': nullCheckJson(json.trainServices[0].destination[0].via),
-        'KEY_SCHEDULED_DEPARTURE': nullCheckJson(json.trainServices[0].std),
-        'KEY_EXPECTED_DEPARTURE': nullCheckJson(json.trainServices[0].etd),
-        'KEY_PLATFORM': nullCheckJson(json.trainServices[0].platform),
         'KEY_TRAIN_DATA':serialisedTrainString
       };
 
