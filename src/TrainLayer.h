@@ -13,6 +13,16 @@ struct TrainLayers
     char train_line_4_buffer_formatted[32];
   
 };  
+
+struct Train
+{
+    char train_destinationstation[32];
+    char train_via[32];
+    char train_scheduled_departure[32];
+    char train_expected_departure[32];
+    char train_platform[5];
+  
+};  
   
 void setupTrainLayer( struct TrainLayers *trainLayer, Window *window );
 

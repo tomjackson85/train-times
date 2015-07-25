@@ -37,7 +37,7 @@ function getTrains(fromStation, toStation) {
 //  );
   
   // Construct URL
-  var url = 'https://huxley.apphb.com/all/'+ fromStation +'/to/'+ toStation +'/1?accessToken=DA1C7740-9DA0-11E4-80E6-A920340000B1';
+  var url = 'https://huxley.apphb.com/all/'+ fromStation +'/to/'+ toStation +'/5?accessToken=DA1C7740-9DA0-11E4-80E6-A920340000B1';
 
   // Send request to OpenWeatherMap
   xhrRequest(url, 'GET', 
@@ -47,6 +47,22 @@ function getTrains(fromStation, toStation) {
       
       console.log(json.trainServices[0].destination[0].via);
       
+      var serialisedTrainString = "";
+      
+      for(x in json.trainServices){
+        serialisedTrainString += nullCheckJson(json.trainServices[x].destination[0].locationName) + "|";
+        serialisedTrainString += nullCheckJson(json.trainServices[x].destination[0].via) + "|";
+        serialisedTrainString += nullCheckJson(json.trainServices[x].std) + "|";
+        serialisedTrainString += nullCheckJson(json.trainServices[x].etd) + "|";
+        serialisedTrainString += nullCheckJson(json.trainServices[x].platform) + "~";
+      }
+      
+      if(serialisedTrainString.slice(-1)== "~"){
+         serialisedTrainString = serialisedTrainString.slice(0,-1);
+         }
+      
+      console.log(serialisedTrainString);
+      
       // Assemble dictionary using our keys
       var dictionary = {
         'KEY_STATION': nullCheckJson(json.locationName),
@@ -55,7 +71,8 @@ function getTrains(fromStation, toStation) {
         'KEY_TRAIN_VIA': nullCheckJson(json.trainServices[0].destination[0].via),
         'KEY_SCHEDULED_DEPARTURE': nullCheckJson(json.trainServices[0].std),
         'KEY_EXPECTED_DEPARTURE': nullCheckJson(json.trainServices[0].etd),
-        'KEY_PLATFORM': nullCheckJson(json.trainServices[0].platform)
+        'KEY_PLATFORM': nullCheckJson(json.trainServices[0].platform),
+        'KEY_TRAIN_DATA':serialisedTrainString
       };
 
       // Send to Pebble

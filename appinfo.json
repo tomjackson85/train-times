@@ -7,6 +7,7 @@
         "KEY_SCHEDULED_DEPARTURE": 6,
         "KEY_STATION": 0,
         "KEY_TRAINS": 3,
+        "KEY_TRAIN_DATA": 9,
         "KEY_TRAIN_DESTINATION_STATION": 4,
         "KEY_TRAIN_VIA": 5
     },
