@@ -30,4 +30,6 @@ void updateTrainLayer( struct TrainLayers *trainLayer, char train_destinationsta
                       char train_expected_departure_buffer[32],
                       char train_platform_buffer[32] );
 
+void updateTrainLayerForTrain( struct TrainLayers *trainLayer, struct Train *train );
+
 void destroyTrainLayer( struct TrainLayers *trainLayer);

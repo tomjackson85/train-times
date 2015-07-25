@@ -90,20 +90,20 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 static void main_window_load(Window *window) {
  // Create time TextLayer
-  s_time_layer = text_layer_create(GRect(0, 0, 144, 50));
-  text_layer_set_background_color(s_time_layer, GColorClear);
-  text_layer_set_text_color(s_time_layer, GColorBlack);
+  s_time_layer = text_layer_create(GRect(0, 0, 144, 35));
+  text_layer_set_background_color(s_time_layer, GColorBlack);
+  text_layer_set_text_color(s_time_layer, GColorWhite);
   text_layer_set_text(s_time_layer, "00:00");
 
   // Improve the layout to be more like a watchface
-  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
+  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK));
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
 
   // Add it as a child layer to the Window's root layer
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
   
   // Create Departure Station Layer
-  s_departure_station_layer = text_layer_create(GRect(0, 50, 144, 20));
+  s_departure_station_layer = text_layer_create(GRect(0, 35, 144, 20));
   text_layer_set_background_color(s_departure_station_layer, GColorBlack);
   text_layer_set_text_color(s_departure_station_layer, GColorWhite);
   text_layer_set_text_alignment(s_departure_station_layer, GTextAlignmentCenter);
@@ -112,26 +112,26 @@ static void main_window_load(Window *window) {
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_departure_station_layer));
   
   // Create Filter Station Layer
-  s_filter_station_layer = text_layer_create(GRect(0, 70, 144, 14));
-  text_layer_set_background_color(s_filter_station_layer, GColorClear);
-  text_layer_set_text_color(s_filter_station_layer, GColorBlack);
-  text_layer_set_text_alignment(s_filter_station_layer, GTextAlignmentLeft);
+  s_filter_station_layer = text_layer_create(GRect(0, 51, 144, 18));
+  text_layer_set_background_color(s_filter_station_layer, GColorBlack);
+  text_layer_set_text_color(s_filter_station_layer, GColorWhite);
+  text_layer_set_text_alignment(s_filter_station_layer, GTextAlignmentCenter);
   text_layer_set_text(s_filter_station_layer, "");
   
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_filter_station_layer));
   
   
     // Create Divider Line
-  s_divider_line_1_layer = text_layer_create(GRect(0, 86, 144, 2));
+  s_divider_line_1_layer = text_layer_create(GRect(0, 69, 144, 2));
   text_layer_set_background_color(s_divider_line_1_layer, GColorBlack);
   
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_divider_line_1_layer));
   
   // Add train departure details
-  trainLayer1.yPosition = 85;
+  trainLayer1.yPosition = 69;
   setupTrainLayer(&trainLayer1, window);
   
-  trainLayer2.yPosition = 130;
+  trainLayer2.yPosition = 114;
   setupTrainLayer(&trainLayer2, window);
   
 
@@ -261,10 +261,12 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   snprintf(station_filter_buffer_formatted, sizeof(station_filter_buffer_formatted), "Calling at %s", station_filter_buffer);
   text_layer_set_text(s_filter_station_layer, station_filter_buffer_formatted);
   
-  updateTrainLayer( &trainLayer1, train_destinationstation_buffer, train_via_buffer, train_scheduled_departure_buffer, train_expected_departure_buffer,
-                      train_platform_buffer );
-   updateTrainLayer(&trainLayer2, train2.train_destinationstation, train2.train_via,  train2.train_scheduled_departure, train2.train_expected_departure,
-                   train2.train_platform);
+  //updateTrainLayer( &trainLayer1, train_destinationstation_buffer, train_via_buffer, train_scheduled_departure_buffer, train_expected_departure_buffer,
+  //                    train_platform_buffer );
+  // updateTrainLayer(&trainLayer2, train2.train_destinationstation, train2.train_via,  train2.train_scheduled_departure, train2.train_expected_departure,
+   //                train2.train_platform);
+  updateTrainLayerForTrain(&trainLayer1, &train1);
+  updateTrainLayerForTrain(&trainLayer2, &train2);
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {

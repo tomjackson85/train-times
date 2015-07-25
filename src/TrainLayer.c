@@ -69,6 +69,10 @@ void updateTrainLayer( struct TrainLayers *trainLayer, char train_destinationsta
   
 }
 
+void updateTrainLayerForTrain( struct TrainLayers *trainLayer, struct Train *train ){
+    updateTrainLayer(trainLayer, train->train_destinationstation, train->train_via, train->train_scheduled_departure,
+                     train->train_expected_departure, train->train_platform);
+}
 
 
 void destroyTrainLayer( struct TrainLayers *trainLayer){
