@@ -1,4 +1,19 @@
 
+var keyHomeStation = 100;
+var valueHomeStation = 'WLI';
+var keyWorkStation = 101;
+var valueWorkStation = 'LEW';
+
+// Persist write a key with associated value
+localStorage.setItem(keyHomeStation, valueHomeStation);
+localStorage.setItem(keyWorkStation, valueWorkStation);
+
+// Persist read a key's value. May be null!
+var homeStation = localStorage.getItem(keyHomeStation);
+var workStation = localStorage.getItem(keyWorkStation);
+
+console.log(homeStation);
+console.log(workStation);
 
 var xhrRequest = function (url, type, callback) {
   var xhr = new XMLHttpRequest();
@@ -85,27 +100,24 @@ function getTrains(fromStation, toStation) {
   );
 }
 
-
+function getTrainsBasedOnTime(){
+  var myDate = new Date();   
+    if ( myDate.getHours() < 12 )  
+    {   
+      getTrains(homeStation,workStation);   
+    } 
+    else {
+      getTrains(workStation,homeStation);
+    }
+}
 
 // Listen for when the watchface is opened
 Pebble.addEventListener('ready', 
   function(e) {
     console.log('PebbleKit JS ready!');
     
-    var myDate = new Date();   
-    if ( myDate.getHours() < 12 )  
-    {   
-      getTrains("WLI","LEW"); 
-      //getTrains("TBW","LBG");   
-    } 
-    else {
-      getTrains("LEW","WLI");
-      //getTrains("LBG","TBW");
-    }
-       
-    
-    // Get the initial trains
-    //getTrains("WLI","LEW");
+       getTrainsBasedOnTime();
+
   }
 );
 
@@ -113,18 +125,49 @@ Pebble.addEventListener('ready',
 Pebble.addEventListener('appmessage',
   function(e) {
     console.log('AppMessage received!');
-    //getTrains("WLI","LEW");
-    
-    var myDate = new Date();   
-    if ( myDate.getHours() < 12 )  
-    {   
-      getTrains("WLI","LEW"); 
-      //getTrains("TBW","LBG");   
-    } 
-    else {
-      getTrains("LEW","WLI");
-      //getTrains("LBG","TBW");
-    }
+
+       getTrainsBasedOnTime();
       
   }                     
+);
+
+
+
+// Configuration
+
+Pebble.addEventListener("showConfiguration",
+  function(e) {
+    //Load the remote config page
+    //Pebble.openURL("https://dl.dropboxusercontent.com/u/10824180/pebble%20config%20pages/sdktut9-config.html");
+    
+    Pebble.openURL("https://dl.dropboxusercontent.com/u/14899592/TrainTimeConfig.html");
+    
+  }
+);
+
+Pebble.addEventListener("webviewclosed",
+  function(e) {
+    //Get JSON dictionary
+    var configuration = JSON.parse(decodeURIComponent(e.response));
+    console.log("Configuration window returned: " + JSON.stringify(configuration));
+    
+    localStorage.setItem(keyHomeStation, configuration.homeStation);
+    localStorage.setItem(keyWorkStation, configuration.workStation);
+    
+    homeStation = localStorage.getItem(keyHomeStation);
+    workStation = localStorage.getItem(keyWorkStation);
+    
+    getTrainsBasedOnTime();
+ /*
+    //Send to Pebble, persist there
+    Pebble.sendAppMessage(
+      {"KEY_INVERT": configuration.invert},
+      function(e) {
+        console.log("Sending settings data...");
+      },
+      function(e) {
+        console.log("Settings feedback failed!");
+      }
+    ); */
+  }
 );

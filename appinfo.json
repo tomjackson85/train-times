@@ -5,7 +5,8 @@
         "KEY_TRAIN_DATA": 2
     },
     "capabilities": [
-        "location"
+        "location",
+        "configurable"
     ],
     "companyName": "tom@tejackson.com",
     "longName": "TrainTime",
